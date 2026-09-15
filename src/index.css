@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+.scroll-linked-section {
+  --scroll-enter-y: 56px;
+  will-change: transform, opacity;
+}
+
+.scroll-linked-item {
+  --scroll-item-y: 28px;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 767px) {
+  .scroll-linked-section {
+    --scroll-enter-y: 32px;
+  }
+
+  .scroll-linked-item {
+    --scroll-item-y: 18px;
+  }
+}
+
+@keyframes wave1 {
+  0% {
+    background-position-x: 0px;
+  }
+  100% {
+    background-position-x: 1000px;
+  }
+}
+
+@keyframes wave2 {
+  0% {
+    background-position-x: 0px;
+  }
+  100% {
+    background-position-x: -1000px;
+  }
+}
+
+.animate-wave1 {
+  animation: wave1 30s linear infinite;
+}
+
+.animate-wave2 {
+  animation: wave2 15s linear infinite;
+}
