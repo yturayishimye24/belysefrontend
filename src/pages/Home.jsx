@@ -1,5 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { FaInstagram, FaLinkedin } from "react-icons/fa";
+import AOS from "aos"
+import 'aos/dist/aos.css';
 //images imports
 import BrownCench from "../../src/assets/images/BrownCench.jpeg";
 import cench from "../../src/assets/images/Cench.jpeg";
@@ -35,7 +37,13 @@ function Home() {
   const containerRef = useRef(null);
   const mytextRef = useRef(null);
   const pathRef = useRef(null);
-
+  
+  useEffect(() =>{
+    AOS.init({
+      duration: 2000,
+      once: true,
+    })
+  })
 
   useEffect(() => {
    
@@ -127,12 +135,14 @@ function Home() {
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
-
+ 
   return (
+    
     <div ref={containerRef}
+       id="home"
        className="bg-[linear-gradient(to_right,#0002_1px,transparent_1px),linear-gradient(to_bottom,#0002_1px,transparent_1px)] bg-[size:60px_60px]">
       <nav className="hidden xl:flex justify-between items-center px-16 py-6">
-        <div className="text-3xl font-medium cursor-default">Belyse A.</div>
+        <div className="text-3xl font-medium cursor-default"><a onClick={()=>document.getElementById("home").scrollIntoView({behavior:"smooth"})}>Belyse A.</a></div>
 
         <div >
           <ul className="flex gap-8 text-2xl">
@@ -199,7 +209,7 @@ function Home() {
       </nav>
 
       <nav className="flex xl:hidden justify-between items-center px-8 py-6 relative">
-        <div className="text-2xl font-medium"><img src={LOGO} alt="Profile" className="" /></div>
+        <div className="text-2xl font-medium"><h1 className="text-4xl font-bold">Belyse A.</h1></div>
 
         <div>
           <div
@@ -283,6 +293,7 @@ function Home() {
       >
         <div>
           <img
+            
             ref={profileRef}
             src={cench}
             alt="Profile"
@@ -291,9 +302,9 @@ function Home() {
         </div>
 
         <div className="text-center">
-          <p className="text-lg">Hello, I'm</p>
+          <p className="text-lg" data-aos="zoom-out-left">Hello, I'm</p>
 
-          <h1 ref={textRef} className="text-6xl font-bold mt-2 opacity-0"><span className="relative inline-block px-2">Belyse A.</span>
+          <h1 ref={textRef} className="text-6xl font-bold mt-2 opacity-0"><span className="relative inline-block px-2" data-aos="zoom-in-up">Belyse A.</span>
           <svg
             className="absolute -top-2 -left-2 w-[115%] h-[140%] pointer-events-none overflow-visible"
             viewBox="0 0 200 60"
@@ -313,20 +324,20 @@ function Home() {
 
           <div className="flex flex-wrap justify-center gap-4 mt-8">
             <a href="/ThisWillBeUpdatedIfBessySharesMeHerCV.pdf" download>
-            <button className="border border-black rounded-full px-8 py-4 hover:bg-black hover:text-white transition-all duration-300">
+            <button className="border border-black rounded-full px-8 py-4 hover:bg-black hover:text-white transition-all duration-300" data-aos="fade-up-left">
               Download CV
             </button>
             </a>
 
-            <button className="bg-black text-white rounded-full px-8 py-4 hover:bg-gray-800 transition-all duration-300">
+            <button className="bg-black text-white rounded-full px-8 py-4 hover:bg-gray-800 transition-all duration-300" data-aos="fade-up-left">
               Contact Info
             </button>
           </div>
 
           <div className="flex justify-center gap-6 mt-8">
-            <FaInstagram size={50} color="purple" className="hover:text-purple-500 cursor-pointer" /> 
+            <FaInstagram size={50} color="purple" className="hover:text-purple-500 cursor-pointer" data-aos="fade-right" /> 
 
-            <FaLinkedin size={50} color="blue" className="hover:text-blue-500 cursor-pointer"/>
+            <FaLinkedin size={50} color="blue" className="hover:text-blue-500 cursor-pointer" data-aos="fade-left"/>
           </div>
         </div>
       </section>
@@ -334,6 +345,7 @@ function Home() {
       {/* About Section */}
       <ScrollLinkedSection
         ref={aboutRef}
+        id="about"
         className="min-h-screen px-[5%] py-20 animate-[appearRight_1s_linear]"
       >
         <p className="text-lg font-semibold text-gray-600 uppercase tracking-wider text-center"><span className="relative inline-block px-2">Get To Know More
@@ -368,6 +380,7 @@ function Home() {
       {/* Experience Section */}
       <ScrollLinkedSection
         ref={experienceRef}
+        id="experience"
         className="min-h-screen px-[5%] py-20 animate-[appearLeft_1s_linear]"
       >
         <Experience />
@@ -376,6 +389,7 @@ function Home() {
    
       <ScrollLinkedSection
         ref={projectsRef}
+        id="projects"
         className="min-h-screen px-[5%]  animate-[appearRight_1s_linear]"
       >
         <p className="text-lg font-semibold text-gray-600 uppercase tracking-wider text-center">Browse My Recent</p>
@@ -390,6 +404,7 @@ function Home() {
 
       <ScrollLinkedSection
         ref={contactRef}
+        id="contact"
         className="min-h-screen px-[5%] flex flex-col justify-center items-center mb-20"
       >
         <p className="text-lg font-semibold text-gray-600 uppercase tracking-wider text-center">Get in Touch</p>

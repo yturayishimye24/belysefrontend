@@ -24,17 +24,20 @@ export default function NewFooter() {
 
         {/* Footer Links */}
         <nav className="flex items-center space-x-6 md:space-x-8">
+          <a href="#home" className="hover:text-slate-900 transition-colors">
+            Home
+          </a>
           <a href="#about" className="hover:text-slate-900 transition-colors">
             About
+          </a>
+          <a href="#experience" className="hover:text-slate-900 transition-colors">
+            Experience
           </a>
           <a href="#projects" className="hover:text-slate-900 transition-colors">
             Projects
           </a>
-          <a href="#privacy" className="hover:text-slate-900 transition-colors">
-            Privacy
-          </a>
-          <a href="#terms" className="hover:text-slate-900 transition-colors">
-            Terms
+          <a href="#contact" className="hover:text-slate-900 transition-colors">
+            Contact
           </a>
         </nav>
       </ScrollLinkedItem>
