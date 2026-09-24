@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import AOS from "aos"
 import 'aos/dist/aos.css';
@@ -21,8 +21,9 @@ import NewsletterCard from "../components/Contact.jsx";
 //yooprofile
 import GoogleProfileHeader from "../components/googleProfileheader.jsx";
 //imports for design and animations
-import {TweenMax, Power3} from "gsap";
-import {gsap} from "gsap";
+import { TweenMax, Power3 } from "gsap";
+import CardStack from "../components/Slider.jsx";
+import { gsap } from "gsap";
 import ClientsCarousel from "../components/Carousel.jsx";
 import ScrollLinkedSection from "../components/ScrollLinkedSection.jsx";
 import ScrollLinkedItem from "../components/ScrollLinkedItem.jsx";
@@ -46,7 +47,7 @@ function Home() {
   })
 
   useEffect(() => {
-   
+
     const ctx = gsap.context(() => {
       gsap.from(mytextRef.current, {
         y: 30,
@@ -92,7 +93,7 @@ function Home() {
         ease: Power3.easeOut
       }
     )
-  },[]);
+  }, []);
   useEffect(() => {
     TweenMax.from(
       textRef.current,
@@ -139,8 +140,10 @@ function Home() {
   return (
     
     <div ref={containerRef}
+
        id="home"
-       className="bg-[linear-gradient(to_right,#0002_1px,transparent_1px),linear-gradient(to_bottom,#0002_1px,transparent_1px)] bg-[size:60px_60px]">
+       >
+      
       <nav className="hidden xl:flex justify-between items-center px-16 py-6">
         <div className="text-3xl font-medium cursor-default"><a onClick={()=>document.getElementById("home").scrollIntoView({behavior:"smooth"})}>Belyse A.</a></div>
 
@@ -217,28 +220,24 @@ function Home() {
             onClick={toggleMenu}
           >
             <span
-              className={`w-8 h-0.5 bg-black transition-all duration-300 ${
-                menuOpen ? "rotate-45 translate-y-2" : ""
-              }`}
+              className={`w-8 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""
+                }`}
             ></span>
 
             <span
-              className={`w-8 h-0.5 bg-black transition-all duration-300 ${
-                menuOpen ? "opacity-0" : ""
-              }`}
+              className={`w-8 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "opacity-0" : ""
+                }`}
             ></span>
 
             <span
-              className={`w-8 h-0.5 bg-black transition-all duration-300 ${
-                menuOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
+              className={`w-8 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""
+                }`}
             ></span>
           </div>
 
           <div
-            className={`absolute right-8 top-20 bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 ${
-              menuOpen ? "max-h-96 py-4 px-8" : "max-h-0 py-0 px-8"
-            }`}
+            className={`absolute right-8 top-20 bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-96 py-4 px-8" : "max-h-0 py-0 px-8"
+              }`}
           >
             <ul className="flex flex-col gap-4 text-center text-lg">
               <li>
@@ -278,7 +277,7 @@ function Home() {
               </li>
 
               <li>
-                <a href="#contact" onClick={toggleMenu}>
+                <a href="#contact" onClick={() => { toggleMenu(); handleMoveToContact() }}>
                   Contact
                 </a>
               </li>
@@ -297,36 +296,38 @@ function Home() {
             ref={profileRef}
             src={cench}
             alt="Profile"
-            className="w-[400px] h-[400px] object-cover rounded-full xl:w-[400px] xl:h-[400px] md:w-[275px] md:h-[275px]"
+            className="w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[275px] md:h-[275px] xl:w-[400px] xl:h-[400px] object-cover rounded-full md:z-[-1]"
           />
+
         </div>
 
         <div className="text-center">
           <p className="text-lg" data-aos="zoom-out-left">Hello, I'm</p>
 
           <h1 ref={textRef} className="text-6xl font-bold mt-2 opacity-0"><span className="relative inline-block px-2" data-aos="zoom-in-up">Belyse A.</span>
-          <svg
-            className="absolute -top-2 -left-2 w-[115%] h-[140%] pointer-events-none overflow-visible"
-            viewBox="0 0 200 60"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              ref={pathRef}
-              d="M 10 30 C 10 10, 190 5, 190 30 C 190 55, 15 50, 10 30"
-              stroke="#EAB308" /* Yellow-500 Tailwind color */
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
-          </svg></h1>
+            <svg
+              className="absolute -top-2 -left-2 w-[115%] h-[140%] pointer-events-none overflow-visible"
+              viewBox="0 0 200 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                ref={pathRef}
+                d="M 10 30 C 10 10, 190 5, 190 30 C 190 55, 15 50, 10 30"
+                stroke="#EAB308"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </svg>
+          </h1>
 
           <p className="text-3xl mt-4 text-gray-600">a Student</p>
 
           <div className="flex flex-wrap justify-center gap-4 mt-8">
             <a href="/ThisWillBeUpdatedIfBessySharesMeHerCV.pdf" download>
-            <button className="border border-black rounded-full px-8 py-4 hover:bg-black hover:text-white transition-all duration-300" data-aos="fade-up-left">
-              Download CV
-            </button>
+              <button className="border border-black rounded-full px-8 py-4 hover:bg-black hover:text-white transition-all duration-300" data-aos="fade-up-left">
+                Download CV
+              </button>
             </a>
 
             <button className="bg-black text-white rounded-full px-8 py-4 hover:bg-gray-800 transition-all duration-300" data-aos="fade-up-left">
@@ -335,13 +336,12 @@ function Home() {
           </div>
 
           <div className="flex justify-center gap-6 mt-8">
-            <FaInstagram size={50} color="purple" className="hover:text-purple-500 cursor-pointer" data-aos="fade-right" /> 
-
+            <FaInstagram size={50} color="purple" className="hover:text-purple-500 cursor-pointer" data-aos="fade-right" />
             <FaLinkedin size={50} color="blue" className="hover:text-blue-500 cursor-pointer" data-aos="fade-left"/>
           </div>
         </div>
       </section>
-       
+
       {/* About Section */}
       <ScrollLinkedSection
         ref={aboutRef}
@@ -358,7 +358,7 @@ function Home() {
             <path
               ref={pathRef}
               d="M 10 30 C 10 10, 190 5, 190 30 C 190 55, 15 50, 10 30"
-              stroke="#EAB308" 
+              stroke="#EAB308"
               strokeWidth="3"
               strokeLinecap="round"
             />
@@ -371,7 +371,7 @@ function Home() {
         <div className="flex xl:flex-row flex-col gap-20 items-center justify-center mt-20">
           <div className="max-w-3xl">
             <div className="">
-              <RoleSlider image={BrownCench} title="Software Engineer" />
+            <CardStack/>
             </div>
           </div>
         </div>
@@ -386,7 +386,7 @@ function Home() {
         <Experience />
       </ScrollLinkedSection>
 
-   
+
       <ScrollLinkedSection
         ref={projectsRef}
         id="projects"
@@ -399,7 +399,7 @@ function Home() {
         <Projects />
       </ScrollLinkedSection>
       <ScrollLinkedSection>
-        <ClientsCarousel/>
+        <ClientsCarousel />
       </ScrollLinkedSection>
 
       <ScrollLinkedSection
@@ -411,18 +411,18 @@ function Home() {
 
         <h1 className="text-5xl font-bold mt-2 mb-20">Contact Me</h1>
 
-      
+
         <ScrollLinkedItem className="mt-12 w-full">
           <NewsletterCard />
         </ScrollLinkedItem>
-        
+
       </ScrollLinkedSection>
 
-     
-      {/* //Footer */}
-      <NewFooter/>
 
-   
+      {/* //Footer */}
+      <NewFooter />
+
+
     </div>
   );
 }

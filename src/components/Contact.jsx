@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import emailjs from '@emailjs/browser'; // 1. Replaced axios with emailjs
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-/**
- * Google Material "outlined" text field.
- * The label sits inside the border by default; on focus (or once the
- * field has a value) it shrinks up and breaks the top border line,
- * exactly like the Google sign-in / sign-up fields.
- */
 function FloatingField({ id, label, value, onChange, type = 'text', as = 'input', rows = 4, required = false }) {
   const Tag = as;
 
@@ -24,7 +18,7 @@ function FloatingField({ id, label, value, onChange, type = 'text', as = 'input'
     <div className="relative w-full">
       <Tag
         id={id}
-        name={id}
+        name={id} // Crucial: name attribute maps directly to EmailJS dynamic template bracket tags
         type={as === 'input' ? type : undefined}
         rows={as === 'textarea' ? rows : undefined}
         value={value}
@@ -44,17 +38,27 @@ export default function ContactCard() {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [isSending, setIsSending] = useState(false); // Added loading state flag
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(`${backendUrl}/api/send-email/create`, {
-        email,
-        subject,
-        message,
-      });
-      if (response.data.success) {
+    setIsSending(true);
+
+    // 2. Define template parameters object mapping to your EmailJS tags
+    const templateParams = {
+      email: email,
+      subject: subject,
+      message: message,
+    };
+
+    // 3. EmailJS credentials configuration settings
+    const SERVICE_ID = 'YOUR_EMAILJS_SERVICE_ID'; // Replace with yours
+    const TEMPLATE_ID = 'YOUR_EMAILJS_TEMPLATE_ID'; // Replace with yours
+    const PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // Replace with yours
+
+    emailjs
+      .send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
+      .then(() => {
         toast.success('Email sent successfully!', {
           position: 'top-right',
           autoClose: 5000,
@@ -62,16 +66,16 @@ export default function ContactCard() {
         setEmail('');
         setSubject('');
         setMessage('');
-      }
-    } catch (error) {
-      toast.error('Failed to send email. Please try again later.', {
-        position: 'top-right',
-        autoClose: 5000,
+        setIsSending(false);
+      })
+      .catch((error) => {
+        toast.error('Failed to send email. Please try again later.', {
+          position: 'top-right',
+          autoClose: 5000,
+        });
+        console.error('EmailJS Error:', error);
+        setIsSending(false);
       });
-      console.log('Error while sending email:', error);
-    }
-
-    console.log('Sending email data to backend:', email);
   };
 
   return (
@@ -123,12 +127,15 @@ export default function ContactCard() {
           <div className="pointer-events-none absolute -left-6 -top-6 h-12 w-12 rounded-full bg-transparent shadow-[12px_12px_0_0_#f8f9fa]" />
           <button
             type="submit"
-            className="flex items-center justify-center gap-2 rounded-tl-[24px] rounded-br-[28px] bg-[#e8f0fe] px-8 text-sm font-medium text-[#0b57d0] transition-colors duration-200 hover:bg-[#d2e3fc]"
+            disabled={isSending}
+            className="flex items-center justify-center gap-2 rounded-tl-[24px] rounded-br-[28px] bg-[#e8f0fe] px-8 text-sm font-medium text-[#0b57d0] transition-colors duration-200 hover:bg-[#d2e3fc] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span>Send</span>
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
+            <span>{isSending ? 'Sending...' : 'Send'}</span>
+            {!isSending && (
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            )}
           </button>
         </div>
       </form>
