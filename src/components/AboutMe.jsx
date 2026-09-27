@@ -4,23 +4,22 @@ const AboutMe = () => {
   return (
     <section className="bg-white min-h-screen flex flex-col items-center justify-center px-4 font-poppins">
       <div className="max-w-4xl w-full mx-auto">
-        {/* Header Section */}
+        
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 inline-block relative pb-2">
             About Me
-            {/* Dark blue underline bar */}
+           
             <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-1.5 bg-[#1B4B79] rounded-full"></span>
           </h2>
         </div>
 
-        {/* Content Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          {/* Left Column - Profile Image */}
+        <div className="grid grid-cols-1 items-center gap-5 sm:gap-8 md:grid-cols-2">
+         
           <div className="w-full h-full min-h-[380px] max-h-[460px] rounded-2xl overflow-hidden shadow-sm">
             <img
               src={b2profile}
               alt="Profile"
-              className="w-[600px] h-full object-cover object-center"
+              className="h-full w-full object-cover object-center"
             />
           </div>
 

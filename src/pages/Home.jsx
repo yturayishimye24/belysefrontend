@@ -110,25 +110,37 @@ function Home() {
 
   const handleMoveToAbout = () => {
     if (aboutRef.current) {
-      aboutRef.current.scrollIntoView({ behavior: "smooth" });
+      aboutRef.current.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
     }
   };
 
   const handleMoveToExperience = () => {
     if (experienceRef.current) {
-      experienceRef.current.scrollIntoView({ behavior: "smooth" });
+      experienceRef.current.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
     }
   };
 
   const handleMoveToProjects = () => {
     if (projectsRef.current) {
-      projectsRef.current.scrollIntoView({ behavior: "smooth" });
+      projectsRef.current.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
     }
   };
 
   const handleMoveToContact = () => {
     if (contactRef.current) {
-      contactRef.current.scrollIntoView({ behavior: "smooth" });
+      contactRef.current.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
     }
   };
 
@@ -136,7 +148,7 @@ function Home() {
   const [loading,setLoading] = useState(false);
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen((isOpen) => !isOpen);
   };
 
   const causeLoading = () =>{
@@ -156,14 +168,14 @@ function Home() {
        id="home"
        >
       
-      <nav className="hidden xl:flex justify-between items-center px-16 py-6">
-        <div className="text-3xl font-medium cursor-default"><a onClick={()=>document.getElementById("home").scrollIntoView({behavior:"smooth"})}>Belyse A.</a></div>
+      <nav className="hidden items-center justify-between px-8 py-6 lg:flex xl:px-16">
+        <div className="cursor-default text-2xl font-medium xl:text-3xl"><a href="#home">Belyse A.</a></div>
 
         <div >
-          <ul className="flex gap-8 text-2xl">
+          <ul className="flex gap-6 text-lg xl:gap-8 xl:text-2xl">
             <li>
               <a
-                onClick={handleMoveToAbout}
+                onClick={(event) => { event.preventDefault(); handleMoveToAbout(); }}
                 href="#about"
                 className="hover:text-gray-500 transition-all duration-300"
               >
@@ -172,7 +184,7 @@ function Home() {
             </li>
             <li>
               <a
-                onClick={handleMoveToExperience}
+                onClick={(event) => { event.preventDefault(); handleMoveToExperience(); }}
                 href="#experience"
                 className="hover:text-gray-500 transition-all duration-300"
               >
@@ -182,7 +194,7 @@ function Home() {
             <li>
 
               <a
-                onClick={handleMoveToProjects}
+                onClick={(event) => { event.preventDefault(); handleMoveToProjects(); }}
                 href="#projects"
                 className="hover:text-gray-500 transition-all duration-300"
               >
@@ -223,40 +235,51 @@ function Home() {
         </div>
       </nav>
 
-      <nav className="flex xl:hidden justify-between items-center px-8 py-6 relative">
-        <div className="text-2xl font-medium"><h1 className="text-4xl font-bold">Belyse A.</h1></div>
+      <nav className="relative flex items-center justify-between px-4 py-5 sm:px-8 lg:hidden">
+        <a href="#home" className="text-2xl font-bold sm:text-3xl">Belyse A.</a>
 
         <div>
-          <div
+          <button
+            type="button"
             className="flex flex-col gap-1 cursor-pointer"
             onClick={toggleMenu}
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
           >
             <span
+              aria-hidden="true"
               className={`w-8 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""
                 }`}
             ></span>
 
             <span
+              aria-hidden="true"
               className={`w-8 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "opacity-0" : ""
                 }`}
             ></span>
 
             <span
+              aria-hidden="true"
               className={`w-8 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""
                 }`}
             ></span>
-          </div>
+          </button>
 
           <div
-            className={`absolute right-8 top-20 bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-96 py-4 px-8" : "max-h-0 py-0 px-8"
+            id="mobile-navigation"
+            aria-hidden={!menuOpen}
+            inert={!menuOpen}
+            className={`absolute right-4 top-full z-50 w-56 max-w-[calc(100vw-2rem)] rounded-lg bg-white shadow-lg overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-96 py-4 px-6" : "max-h-0 py-0 px-6"
               }`}
           >
             <ul className="flex flex-col gap-4 text-center text-lg">
               <li>
                 <a
                   href="#about"
-                  onClick={() => {
-                    toggleMenu();
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setMenuOpen(false);
                     handleMoveToAbout();
                   }}
                 >
@@ -267,8 +290,9 @@ function Home() {
               <li>
                 <a
                   href="#experience"
-                  onClick={() => {
-                    toggleMenu();
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setMenuOpen(false);
                     handleMoveToExperience();
                   }}
                 >
@@ -279,8 +303,9 @@ function Home() {
               <li>
                 <a
                   href="#projects"
-                  onClick={() => {
-                    toggleMenu();
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setMenuOpen(false);
                     handleMoveToProjects();
                   }}
                 >
@@ -289,7 +314,7 @@ function Home() {
               </li>
 
               <li>
-                <a href="#contact" onClick={() => { toggleMenu(); handleMoveToContact() }}>
+                <a href="#contact" onClick={(event) => { event.preventDefault(); setMenuOpen(false); handleMoveToContact(); }}>
                   Contact
                 </a>
               </li>
@@ -300,7 +325,7 @@ function Home() {
 
       <section
         id="profile"
-        className="min-h-screen flex xl:flex-row flex-col justify-center items-center gap-20 px-[5%]"
+        className="flex min-h-[calc(100svh-5rem)] flex-col items-center justify-center gap-8 px-4 py-12 sm:gap-12 sm:px-[5%] sm:py-16 xl:min-h-screen xl:flex-row xl:gap-20"
       >
         <div>
           <img
@@ -308,15 +333,15 @@ function Home() {
             ref={profileRef}
             src={bprofilepic}
             alt="Profile"
-            className="w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[275px] md:h-[275px] xl:w-[400px] xl:h-[400px] object-cover rounded-full md:z-[-1]"
+            className="h-52 w-52 rounded-full object-cover sm:h-64 sm:w-64 xl:h-[400px] xl:w-[400px]"
           />
 
         </div>
 
-        <div className="text-center">
+        <div className="w-full max-w-2xl px-2 text-center">
           <p className="text-lg" data-aos="zoom-out-left">Hello, I'm</p>
 
-          <h1 ref={textRef} className="text-6xl font-bold mt-2 opacity-0"><span className="relative inline-block px-2" data-aos="zoom-in-up">Belyse A.</span>
+          <h1 ref={textRef} className="mt-2 text-4xl font-bold opacity-0 sm:text-6xl"><span className="relative inline-block px-2" data-aos="zoom-in-up">Belyse A.</span>
             <svg
               className="absolute -top-2 -left-2 w-[115%] h-[140%] pointer-events-none overflow-visible"
               viewBox="0 0 200 60"
@@ -333,23 +358,23 @@ function Home() {
             </svg>
           </h1>
 
-          <p className="text-3xl mt-4 text-gray-600">a Student</p>
+          <p className="mt-4 text-xl text-gray-600 sm:text-3xl">a Student</p>
 
           <div className="flex flex-wrap justify-center gap-4 mt-8">
-            <a href="/ThisWillBeUpdatedIfBessySharesMeHerCV.pdf" download>
+            <a href="/Belyse_Resume.docx" download>
               <button className="border border-black rounded-full px-8 py-4 hover:bg-black hover:text-white transition-all duration-300" data-aos="fade-up-left" onClick={()=>causeLoading()}>
-               {loading?"Downloading...":"Download CV"}
+               {loading?"Downloading...":"Download Resume"}
               </button>
             </a>
 
-            <button className="bg-black text-white rounded-full px-8 py-4 hover:bg-gray-800 transition-all duration-300" data-aos="fade-up-left">
+            <button className="rounded-full bg-black px-5 py-3 text-sm text-white transition-all duration-300 hover:bg-gray-800 sm:px-8 sm:py-4 sm:text-base" data-aos="fade-up-left" onClick={handleMoveToContact}>
               Contact Info
             </button>
           </div>
 
-          <div className="flex justify-center gap-6 mt-8">
-            <FaInstagram size={50} color="purple" className="hover:text-purple-500 cursor-pointer" data-aos="fade-right" />
-            <FaLinkedin size={50} color="blue" className="hover:text-blue-500 cursor-pointer" data-aos="fade-left"/>
+          <div className="mt-8 flex justify-center gap-6">
+            <FaInstagram size={40} color="purple" className="cursor-pointer hover:text-purple-500 sm:h-[50px] sm:w-[50px]" data-aos="fade-right" />
+            <FaLinkedin size={40} color="blue" className="cursor-pointer hover:text-blue-500 sm:h-[50px] sm:w-[50px]" data-aos="fade-left"/>
           </div>
         </div>
       </section>
