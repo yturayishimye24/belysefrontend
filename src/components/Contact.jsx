@@ -1,146 +1,141 @@
-import React, { useState } from 'react';
-import emailjs from '@emailjs/browser'; // 1. Replaced axios with emailjs
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {useRef,useState,useEffect} from "react"
+import emailjs from "@emailjs/browser";
+import {BlinkBlur} from "react-loading-indicators"
+import Aos from "aos";
+import "aos/dist/aos.css"
 
-function FloatingField({ id, label, value, onChange, type = 'text', as = 'input', rows = 4, required = false }) {
-  const Tag = as;
-
-  const fieldClasses =
-    'peer w-full rounded-lg border border-[#747775] bg-transparent px-4 pt-4 pb-[15px] text-[15px] leading-6 text-[#1f1f1f] outline-none transition-colors duration-150 placeholder-transparent focus:border-2 focus:border-[#0b57d0] focus:px-[15px] focus:pt-[15px] focus:pb-[14px] resize-none';
-
-  const labelClasses =
-    'pointer-events-none absolute left-3 top-4 origin-left bg-[#f8f9fa] px-1 text-[15px] text-[#5f6368] transition-all duration-150 ' +
-    'peer-focus:-top-2.5 peer-focus:left-2.5 peer-focus:scale-[0.8] peer-focus:text-[#0b57d0] ' +
-    'peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:left-2.5 peer-[:not(:placeholder-shown)]:scale-[0.8] peer-[:not(:placeholder-shown)]:text-[#5f6368]';
-
-  return (
-    <div className="relative w-full">
-      <Tag
-        id={id}
-        name={id} // Crucial: name attribute maps directly to EmailJS dynamic template bracket tags
-        type={as === 'input' ? type : undefined}
-        rows={as === 'textarea' ? rows : undefined}
-        value={value}
-        onChange={onChange}
-        required={required}
-        placeholder=" "
-        className={fieldClasses}
-      />
-      <label htmlFor={id} className={labelClasses}>
-        {label}
-      </label>
-    </div>
-  );
-}
-
-export default function ContactCard() {
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [isSending, setIsSending] = useState(false); // Added loading state flag
-
-  const handleSubmit = async (e) => {
+export default function Contact() {
+  const [loading,setLoading] = useState(false);
+  const form = useRef();
+  useEffect(()=>{
+     Aos.init({
+      duration: 1000,
+      once: true,
+     })
+  },[])
+  const sendEmail = async (e) =>{
     e.preventDefault();
-    setIsSending(true);
+    setLoading(true);
 
-    // 2. Define template parameters object mapping to your EmailJS tags
-    const templateParams = {
-      email: email,
-      subject: subject,
-      message: message,
-    };
-
-    // 3. EmailJS credentials configuration settings
-    const SERVICE_ID = 'YOUR_EMAILJS_SERVICE_ID'; // Replace with yours
-    const TEMPLATE_ID = 'YOUR_EMAILJS_TEMPLATE_ID'; // Replace with yours
-    const PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // Replace with yours
-
-    emailjs
-      .send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
-      .then(() => {
-        toast.success('Email sent successfully!', {
-          position: 'top-right',
-          autoClose: 5000,
-        });
-        setEmail('');
-        setSubject('');
-        setMessage('');
-        setIsSending(false);
-      })
-      .catch((error) => {
-        toast.error('Failed to send email. Please try again later.', {
-          position: 'top-right',
-          autoClose: 5000,
-        });
-        console.error('EmailJS Error:', error);
-        setIsSending(false);
-      });
-  };
+    try{
+      await emailjs.sendForm("service_fvyjy5k", "template_wjatw3b", form.current, "vfvKIY9D4tzjlkrbJ");
+      alert("Message sent successfully!");
+      form.current.reset();
+    } catch {
+      alert("Failed to send message, please try again");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <div
-      className="relative w-full max-w-2xl mx-auto overflow-hidden rounded-[28px] border border-[#e0e0e0] bg-[#f8f9fa] p-8 font-sans shadow-sm md:p-10"
-      id="contact-section"
-    >
-      {/* Heading */}
-      <div className="mb-8 max-w-xl">
-        <h2 className="text-center font-['Segoe_UI',Arial,sans-serif] text-3xl leading-tight tracking-tight text-[#1f1f1f] md:text-4xl">
-          Please, let's stay in touch!
-        </h2>
-        <p className="mt-4 text-center font-poppins text-2xl leading-relaxed text-[#5f6368]">
-          Let's get connected!
-        </p>
-      </div>
+    <section id="contact" className="w-full scroll-mt-24 bg-white px-4 py-16">
+      <div className="max-w-xl mx-auto space-y-6">
+        <h2 className="text-5xl font-poppins text-center text-gray-800">Get in Touch</h2>
+        
+        <form ref={form} className="space-y-5" onSubmit={sendEmail}>
+         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+         <div className="flex flex-col space-y-4">
+          <div className="relative">
+            <input
+              data-aos="fade-up"
+              name="firstName"
+              type="text"
+              id="firstName"
+              className="block w-full px-4 pt-5 pb-2 text-sm text-gray-900 bg-transparent rounded-md border border-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-[#0F9D58] focus:border-transparent peer"
+              placeholder=""
+              required
+            />
+            <label
+              htmlFor="firstName"
+              className="absolute text-sm text-gray-500 duration-200 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 bg-white px-1 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#0F9D58]"
+            >
+              First name
+            </label>
+          </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="relative flex w-full flex-col">
-        <div className="mb-16 flex w-full flex-col gap-6 md:max-w-md">
-          <FloatingField
-            id="subject"
-            label="Subject"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            required
-          />
-          <FloatingField
-            id="email"
-            label="Enter email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <FloatingField
-            id="message"
-            label="Message"
-            as="textarea"
-            rows={4}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-          />
-        </div>
-
-        {/* Cut-corner send button, anchored to the card's bottom-right edge */}
-        <div className="absolute bottom-0 right-0 flex h-16 items-stretch justify-end">
-          <div className="pointer-events-none absolute -left-6 -top-6 h-12 w-12 rounded-full bg-transparent shadow-[12px_12px_0_0_#f8f9fa]" />
+          <div className="relative">
+            <input
+              data-aos="fade-left"
+              name="lastName"
+              type="text"
+              id="lastName"
+              className="block w-full px-4 pt-5 pb-2 text-sm text-gray-900 bg-transparent rounded-md border border-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-[#0F9D58] focus:border-transparent peer"
+              placeholder=" "
+              required
+            />
+            <label
+              htmlFor="lastName"
+              className="absolute text-sm text-gray-500 duration-200 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 bg-white px-1 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#0F9D58]"
+            >
+              Last name
+            </label>
+          </div>
+          
+          <div className="relative">
+            <input
+              data-aos="fade-left"
+              name="email"
+              type="email"
+              id="email"
+              className="block w-full px-4 pt-5 pb-2 text-sm text-gray-900 bg-transparent rounded-md border border-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-[#0F9D58] focus:border-transparent peer"
+              placeholder=" "
+              required
+            />
+            <label
+              htmlFor="email"
+              className="absolute text-sm text-gray-500 duration-200 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 bg-white px-1 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#0F9D58]"
+            >
+               Email
+            </label>
+          </div>
+          </div>
+         
+          <div className="relative h-full">
+            <textarea
+              data-aos="fade-down"
+              name="message"
+              id="message"
+              rows="4"
+              className="block h-full min-h-[188px] w-full resize-none px-4 pt-5 pb-2 text-sm text-gray-900 bg-transparent rounded-md border border-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-[#0F9D58] focus:border-transparent peer"
+              placeholder=""
+              required
+            />
+            <label
+              htmlFor="message"
+              className="absolute text-sm text-gray-500 duration-200 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 bg-white px-1 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#0F9D58]"
+            >
+              Your Message
+            </label>
+          </div>
+</div>
           <button
             type="submit"
-            disabled={isSending}
-            className="flex items-center justify-center gap-2 rounded-tl-[24px] rounded-br-[28px] bg-[#e8f0fe] px-8 text-sm font-medium text-[#0b57d0] transition-colors duration-200 hover:bg-[#d2e3fc] disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading}
+            className="w-full py-2.5 bg-[#0F9D58] hover:bg-[#18975a] text-white font-medium rounded-md text-sm transition-all disabled:cursor-not-allowed disabled:hover:bg-green-100"
           >
-            <span>{isSending ? 'Sending...' : 'Send'}</span>
-            {!isSending && (
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            )}
+            {!loading? "Send" : "Sending..."}
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
 
-      <ToastContainer position="top-right" />
-    </div>
+      {loading && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Sending message"
+        >
+          <div className="flex min-h-[188px] w-full max-w-sm items-center justify-center rounded-md bg-white px-8 shadow-xl">
+            <BlinkBlur
+              color={["#4285F4", "#EA4335", "#FBBC05", "#34A853"]}
+              size="medium"
+              text=""
+              textColor=""
+            />
+          </div>
+        </div>
+      )}
+    </section>
   );
 }

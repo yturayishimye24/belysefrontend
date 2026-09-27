@@ -3,8 +3,9 @@ import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import AOS from "aos"
 import 'aos/dist/aos.css';
 //images imports
+import AboutMe from "../components/AboutMe.jsx";
 import BrownCench from "../../src/assets/images/BrownCench.jpeg";
-import cench from "../../src/assets/images/Cench.jpeg";
+import bprofilepic from "../../src/assets/images/bprofilepic.jpg";
 import { useRef } from "react";
 import Chelsea from "../../src/assets/images/Chelsea.webp";
 import LOGO from "../../src/assets/images/LOGO.png";
@@ -132,15 +133,26 @@ function Home() {
   };
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loading,setLoading] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const causeLoading = () =>{
+    try{
+      setLoading(true);
+    }catch(error){
+      console.log("Error laoding");
+    }finally{
+      setLoading(false);
+    }
+  }
  
   return (
     
     <div ref={containerRef}
-
+       className="font-poppins"
        id="home"
        >
       
@@ -294,7 +306,7 @@ function Home() {
           <img
             
             ref={profileRef}
-            src={cench}
+            src={bprofilepic}
             alt="Profile"
             className="w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[275px] md:h-[275px] xl:w-[400px] xl:h-[400px] object-cover rounded-full md:z-[-1]"
           />
@@ -325,8 +337,8 @@ function Home() {
 
           <div className="flex flex-wrap justify-center gap-4 mt-8">
             <a href="/ThisWillBeUpdatedIfBessySharesMeHerCV.pdf" download>
-              <button className="border border-black rounded-full px-8 py-4 hover:bg-black hover:text-white transition-all duration-300" data-aos="fade-up-left">
-                Download CV
+              <button className="border border-black rounded-full px-8 py-4 hover:bg-black hover:text-white transition-all duration-300" data-aos="fade-up-left" onClick={()=>causeLoading()}>
+               {loading?"Downloading...":"Download CV"}
               </button>
             </a>
 
@@ -348,30 +360,13 @@ function Home() {
         id="about"
         className="min-h-screen px-[5%] py-20 animate-[appearRight_1s_linear]"
       >
-        <p className="text-lg font-semibold text-gray-600 uppercase tracking-wider text-center"><span className="relative inline-block px-2">Get To Know More
-          <svg
-            className="absolute -top-2 -left-2 w-[115%] h-[140%] pointer-events-none overflow-visible"
-            viewBox="0 0 200 60"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              ref={pathRef}
-              d="M 10 30 C 10 10, 190 5, 190 30 C 190 55, 15 50, 10 30"
-              stroke="#EAB308"
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
-          </svg></span></p>
-
-        <h1 className="text-center text-4xl md:text-5xl font-sans text-gray-900 tracking-tight font-normal">
-          About Me
-        </h1>
+       
+        
 
         <div className="flex xl:flex-row flex-col gap-20 items-center justify-center mt-20">
           <div className="max-w-3xl">
             <div className="">
-            <CardStack/>
+            <AboutMe/>
             </div>
           </div>
         </div>
