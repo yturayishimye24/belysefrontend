@@ -1,448 +1,231 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaInstagram, FaLinkedin } from "react-icons/fa";
-import AOS from "aos"
-import 'aos/dist/aos.css';
-//images imports
-import AboutMe from "../components/AboutMe.jsx";
-import BrownCench from "../../src/assets/images/BrownCench.jpeg";
+import { gsap } from "gsap";
+import { motion } from "framer-motion";
 import bprofilepic from "../../src/assets/images/bprofilepic.jpg";
-import { useRef } from "react";
-import Chelsea from "../../src/assets/images/Chelsea.webp";
-import LOGO from "../../src/assets/images/LOGO.png";
-//Button design imported from UIVerse
 import Button from "../components/ContactButton.jsx";
-//New footer import
-import NewFooter from "../components/NewFooter.jsx";
-//components imports
+import AboutMe from "../components/AboutMe.jsx";
 import Experience from "../components/Experience.jsx";
 import Projects from "../components/Projects.jsx";
-import RoleSlider from "../components/RolesSlider.jsx";
-import Footer from "../components/Footer.jsx";
-import NewsletterCard from "../components/Contact.jsx";
-//yooprofile
-import GoogleProfileHeader from "../components/googleProfileheader.jsx";
-//imports for design and animations
-import { TweenMax, Power3 } from "gsap";
-import CardStack from "../components/Slider.jsx";
-import { gsap } from "gsap";
 import ClientsCarousel from "../components/Carousel.jsx";
+import NewsletterCard from "../components/Contact.jsx";
+import NewFooter from "../components/NewFooter.jsx";
 import ScrollLinkedSection from "../components/ScrollLinkedSection.jsx";
 import ScrollLinkedItem from "../components/ScrollLinkedItem.jsx";
 
+const LINKS = [
+  { id: "home", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "contact", label: "Contact" },
+];
+
 function Home() {
-  const aboutRef = useRef(null);
-  const experienceRef = useRef(null);
-  const projectsRef = useRef(null);
-  const contactRef = useRef(null);
-  const profileRef = useRef(null);
-  let textRef = useRef(null);
-  const containerRef = useRef(null);
-  const mytextRef = useRef(null);
-  const pathRef = useRef(null);
-  
-  useEffect(() =>{
-    AOS.init({
-      duration: 2000,
-      once: true,
-    })
-  })
+  const refs = {
+    home: useRef(null),
+    about: useRef(null),
+    experience: useRef(null),
+    projects: useRef(null),
+    contact: useRef(null),
+  };
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const [hasScrolled, setHasScrolled] = useState(false);
 
+  // One orchestrated load moment: hero text rises in, photo settles.
   useEffect(() => {
-
     const ctx = gsap.context(() => {
-      gsap.from(mytextRef.current, {
-        y: 30,
-        opacity: 0,
-        duration: 1.2,
-        stagger: 0.2,
-        ease: 'power3.out',
-      });
-    }, containerRef);
-
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.from(".hero-text > *", { y: 30, opacity: 0, duration: 0.9, stagger: 0.12 })
+        .from(".hero-photo", { scale: 0.92, opacity: 0, duration: 0.9 }, 0.2);
+    }, refs.home);
     return () => ctx.revert();
   }, []);
 
   useEffect(() => {
-    const path = pathRef.current;
-    if (!path) return;
-
-    // 1. Measure the exact length of the path
-    const pathLength = path.getTotalLength();
-
-    // 2. Hide the line completely on mount
-    gsap.set(path, {
-      strokeDasharray: pathLength,
-      strokeDashoffset: pathLength,
-    });
-
-    // 3. Play the drawing animation immediately
-    gsap.to(path, {
-      strokeDashoffset: 0,
-      duration: 1.4,
-      ease: 'power2.inOut',
-      delay: 0.2, // Short pause so the user sees it start drawing
-    });
+    const updateScrollState = () => setHasScrolled(window.scrollY > 80);
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollState);
   }, []);
 
   useEffect(() => {
-    TweenMax.to(
-      profileRef.current,
-      .9,
-      {
-        opacity: 1,
-        y: -60,
-        ease: Power3.easeOut
-      }
-    )
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleSections = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((first, second) => second.intersectionRatio - first.intersectionRatio);
+        if (visibleSections[0]) setActiveSection(visibleSections[0].target.id);
+      },
+      { rootMargin: "-25% 0px -60% 0px", threshold: [0, 0.15, 0.4, 0.7] },
+    );
+
+    Object.values(refs).forEach((sectionRef) => {
+      if (sectionRef.current) observer.observe(sectionRef.current);
+    });
+    return () => observer.disconnect();
   }, []);
-  useEffect(() => {
-    TweenMax.from(
-      textRef.current,
-      .9,
-      {
-        opacity: 1,
-        ease: Power3.easeOut,
-        delay: .3,
-        x: -30,
-      }
-    )
-  })
 
-  const handleMoveToAbout = () => {
-    if (aboutRef.current) {
-      aboutRef.current.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
-    }
+  const goTo = (id) => {
+    setMenuOpen(false);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    refs[id].current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   };
 
-  const handleMoveToExperience = () => {
-    if (experienceRef.current) {
-      experienceRef.current.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
-    }
-  };
-
-  const handleMoveToProjects = () => {
-    if (projectsRef.current) {
-      projectsRef.current.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
-    }
-  };
-
-  const handleMoveToContact = () => {
-    if (contactRef.current) {
-      contactRef.current.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
-    }
-  };
-
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [loading,setLoading] = useState(false);
-
-  const toggleMenu = () => {
-    setMenuOpen((isOpen) => !isOpen);
-  };
-
-  const causeLoading = () =>{
-    try{
-      setLoading(true);
-    }catch(error){
-      console.log("Error laoding");
-    }finally{
-      setLoading(false);
-    }
-  }
- 
   return (
-    
-    <div ref={containerRef}
-       className="font-poppins"
-       id="home"
-       >
-      
-      <nav className="hidden items-center justify-between px-8 py-6 lg:flex xl:px-16">
-        <div className="cursor-default text-2xl font-medium xl:text-3xl"><a href="#home">Belyse A.</a></div>
-
-        <div >
-          <ul className="flex gap-6 text-lg xl:gap-8 xl:text-2xl">
-            <li>
-              <a
-                onClick={(event) => { event.preventDefault(); handleMoveToAbout(); }}
-                href="#about"
-                className="hover:text-gray-500 transition-all duration-300"
-              >
-                About
-              </a>
-            </li>
-            <li>
-              <a
-                onClick={(event) => { event.preventDefault(); handleMoveToExperience(); }}
-                href="#experience"
-                className="hover:text-gray-500 transition-all duration-300"
-              >
-                Experience
-              </a>
-            </li>
-            <li>
-
-              <a
-                onClick={(event) => { event.preventDefault(); handleMoveToProjects(); }}
-                href="#projects"
-                className="hover:text-gray-500 transition-all duration-300"
-              >
-                Projects
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          {/* <button className="group flex items-center gap-2 border border-black rounded-full px-6 py-3 hover:bg-black hover:text-white transition-all duration-300">
-            <a href="#contact" onClick={handleMoveToContact}>
-              Get in touch
-            </a>
-
-            <svg
-              width="15"
-              height="10"
-              viewBox="0 0 13 10"
-              className="group-hover:translate-x-1 transition-all duration-300"
-            >
-              <path
-                d="M1,5 L11,5"
-                stroke="currentColor"
-                strokeWidth="2"
-                fill="none"
-              ></path>
-
-              <polyline
-                points="8 1 12 5 8 9"
-                stroke="currentColor"
-                strokeWidth="2"
-                fill="none"
-              ></polyline>
-            </svg>
-          </button> */}
-          <Button onClick={handleMoveToContact} />
-        </div>
-      </nav>
-
-      <nav className="relative flex items-center justify-between px-4 py-5 sm:px-8 lg:hidden">
-        <a href="#home" className="text-2xl font-bold sm:text-3xl">Belyse A.</a>
-
-        <div>
-          <button
-            type="button"
-            className="flex flex-col gap-1 cursor-pointer"
-            onClick={toggleMenu}
-            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
+    <div className="font-google-sans bg-white text-[#15333b]">
+      {/* HERO */}
+      <header
+        ref={refs.home}
+        id="home"
+        className="relative scroll-mt-20 overflow-hidden bg-gradient-to-br from-[#0D4580] via-[#0A4857] to-[#008D9F] text-white"
+      >
+        <nav className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-5 py-6 lg:px-10">
+          <a href="#home" onClick={(e) => { e.preventDefault(); goTo("home"); }} className="text-3xl font-bold tracking-tight lg:text-4xl">
+            Belyse<span className="text-cyan-200">.</span>
+          </a>
+          <motion.div
+            role="group"
+            aria-label="Main navigation"
+            className={`relative rounded-full border p-1 text-white transition-[background-color,border-color,box-shadow] duration-300 ${hasScrolled ? "fixed left-1/2 top-4 z-50 -translate-x-1/2 border-white/15 bg-[#0A4857]/90 shadow-xl shadow-[#062f39]/20 backdrop-blur-xl" : "border-transparent bg-transparent shadow-none"}`}
           >
-            <span
-              aria-hidden="true"
-              className={`w-8 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""
-                }`}
-            ></span>
-
-            <span
-              aria-hidden="true"
-              className={`w-8 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "opacity-0" : ""
-                }`}
-            ></span>
-
-            <span
-              aria-hidden="true"
-              className={`w-8 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""
-                }`}
-            ></span>
-          </button>
-
-          <div
-            id="mobile-navigation"
-            aria-hidden={!menuOpen}
-            inert={!menuOpen}
-            className={`absolute right-4 top-full z-50 w-56 max-w-[calc(100vw-2rem)] rounded-lg bg-white shadow-lg overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-96 py-4 px-6" : "max-h-0 py-0 px-6"
-              }`}
-          >
-            <ul className="flex flex-col gap-4 text-center text-lg">
-              <li>
-                <a
-                  href="#about"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setMenuOpen(false);
-                    handleMoveToAbout();
-                  }}
-                >
-                  About
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#experience"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setMenuOpen(false);
-                    handleMoveToExperience();
-                  }}
-                >
-                  Experience
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#projects"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setMenuOpen(false);
-                    handleMoveToProjects();
-                  }}
-                >
-                  Projects
-                </a>
-              </li>
-
-              <li>
-                <a href="#contact" onClick={(event) => { event.preventDefault(); setMenuOpen(false); handleMoveToContact(); }}>
-                  Contact
-                </a>
-              </li>
+            <ul className="hidden items-center gap-1 lg:flex">
+              {LINKS.map((link) => (
+                <li key={link.id}>
+                  <a
+                    href={`#${link.id}`}
+                    onClick={(e) => { e.preventDefault(); goTo(link.id); }}
+                    className={`relative block rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-white/10 hover:text-cyan-100 ${activeSection === link.id ? "text-white" : "text-white/75"}`}
+                    aria-current={activeSection === link.id ? "location" : undefined}
+                  >
+                    {hasScrolled && activeSection === link.id && (
+                      <motion.span
+                        layoutId="active-nav-pill"
+                        className="absolute inset-0 rounded-full bg-white/15 ring-1 ring-white/20"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">{link.label}</span>
+                  </a>
+                </li>
+              ))}
             </ul>
-          </div>
-        </div>
-      </nav>
 
-      <section
-        id="profile"
-        className="flex min-h-[calc(100svh-5rem)] flex-col items-center justify-center gap-8 px-4 py-12 sm:gap-12 sm:px-[5%] sm:py-16 xl:min-h-screen xl:flex-row xl:gap-20"
-      >
-        <div>
-          <img
-            
-            ref={profileRef}
-            src={bprofilepic}
-            alt="Profile"
-            className="h-52 w-52 rounded-full object-cover sm:h-64 sm:w-64 xl:h-[400px] xl:w-[400px]"
-          />
-
-        </div>
-
-        <div className="w-full max-w-2xl px-2 text-center">
-          <p className="text-lg" data-aos="zoom-out-left">Hello, I'm</p>
-
-          <h1 ref={textRef} className="mt-2 text-4xl font-bold opacity-0 sm:text-6xl"><span className="relative inline-block px-2" data-aos="zoom-in-up">Belyse A.</span>
-            <svg
-              className="absolute -top-2 -left-2 w-[115%] h-[140%] pointer-events-none overflow-visible"
-              viewBox="0 0 200 60"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                ref={pathRef}
-                d="M 10 30 C 10 10, 190 5, 190 30 C 190 55, 15 50, 10 30"
-                stroke="#EAB308"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-            </svg>
-          </h1>
-
-          <p className="mt-4 text-xl text-gray-600 sm:text-3xl">a Student</p>
-
-          <div className="flex flex-wrap justify-center gap-4 mt-8">
-            <a href="/Belyse_Resume.docx" download>
-              <button className="border border-black rounded-full px-8 py-4 hover:bg-black hover:text-white transition-all duration-300" data-aos="fade-up-left" onClick={()=>causeLoading()}>
-               {loading?"Downloading...":"Download Resume"}
+            <div className="relative lg:hidden">
+              <button
+                type="button"
+                className="flex h-10 w-10 flex-col items-center justify-center gap-1.5"
+                onClick={() => setMenuOpen((open) => !open)}
+                aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+                aria-expanded={menuOpen}
+                aria-controls="mobile-navigation"
+              >
+                <span className={`h-0.5 w-6 bg-white transition-all ${menuOpen ? "translate-y-2 rotate-45" : ""}`} />
+                <span className={`h-0.5 w-6 bg-white transition-all ${menuOpen ? "opacity-0" : ""}`} />
+                <span className={`h-0.5 w-6 bg-white transition-all ${menuOpen ? "-translate-y-2 -rotate-45" : ""}`} />
               </button>
-            </a>
-
-            <button className="rounded-full bg-black px-5 py-3 text-sm text-white transition-all duration-300 hover:bg-gray-800 sm:px-8 sm:py-4 sm:text-base" data-aos="fade-up-left" onClick={handleMoveToContact}>
-              Contact Info
-            </button>
+              <div
+                id="mobile-navigation"
+                inert={!menuOpen}
+                className={`absolute right-0 top-full mt-3 w-56 overflow-hidden rounded-2xl border border-white/20 bg-[#0A4857]/95 text-white shadow-xl backdrop-blur-xl transition-all duration-300 ${menuOpen ? "max-h-96 p-4" : "max-h-0 px-4"}`}
+              >
+                <ul className="flex flex-col gap-2 text-center">
+                  {LINKS.map((link) => (
+                    <li key={link.id}>
+                      <a
+                        href={`#${link.id}`}
+                        onClick={(e) => { e.preventDefault(); goTo(link.id); }}
+                        className={`block rounded-full px-4 py-2 ${activeSection === link.id ? "bg-white/15 text-white" : "text-white/80"}`}
+                        aria-current={activeSection === link.id ? "location" : undefined}
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+          <div className="hidden lg:block">
+            <Button onClick={() => goTo("contact")} />
           </div>
+        </nav>
 
-          <div className="mt-8 flex justify-center gap-6">
-            <FaInstagram size={40} color="purple" className="cursor-pointer hover:text-purple-500 sm:h-[50px] sm:w-[50px]" data-aos="fade-right" />
-            <FaLinkedin size={40} color="blue" className="cursor-pointer hover:text-blue-500 sm:h-[50px] sm:w-[50px]" data-aos="fade-left"/>
-          </div>
-        </div>
-      </section>
+        <section
+          id="profile"
+          className="hero-text relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-5 pb-28 pt-8 lg:grid-cols-2 lg:px-10 lg:pb-36 lg:pt-16"
+        >
+          <div className="text-center lg:text-left">
+            <p className="text-3xl font-light tracking-wide sm:text-4xl">Hello, I'm</p>
+            <h1 className="mt-2 text-5xl font-bold leading-tight sm:text-6xl xl:text-7xl">Belyse Abayisenga</h1>
+            <p className="mx-auto mt-5 max-w-md text-base text-cyan-50 lg:mx-0">
+              Student, problem-solver and team leader with a passion for STEM and innovation.
+            </p>
 
-      {/* About Section */}
-      <ScrollLinkedSection
-        ref={aboutRef}
-        id="about"
-        className="min-h-screen px-[5%] py-20 animate-[appearRight_1s_linear]"
-      >
-       
-        
+            <div className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start">
+              <button
+                onClick={() => goTo("contact")}
+                className="rounded-full bg-gradient-to-r from-[#0b3540] to-[#12a2ad] px-8 py-3 text-sm font-semibold shadow-lg shadow-[#062f39]/30 transition-transform hover:-translate-y-0.5"
+              >
+                Contact me
+              </button>
+              <a
+                href="/Belyse_Resume.docx"
+                download
+                className="rounded-full border-2 border-white/80 px-8 py-3 text-sm font-semibold transition-colors hover:bg-white hover:text-[#0A4857]"
+              >
+                Download resume
+              </a>
+            </div>
 
-        <div className="flex xl:flex-row flex-col gap-20 items-center justify-center mt-20">
-          <div className="max-w-3xl">
-            <div className="">
-            <AboutMe/>
+            <div className="mt-8 flex justify-center gap-5 text-2xl lg:justify-start">
+              <a href="#" aria-label="Instagram" className="transition-colors hover:text-cyan-200"><FaInstagram /></a>
+              <a href="#" aria-label="LinkedIn" className="transition-colors hover:text-cyan-200"><FaLinkedin /></a>
             </div>
           </div>
-        </div>
+
+          <div className="hero-photo relative mx-auto h-72 w-72 sm:h-96 sm:w-96 xl:h-[460px] xl:w-[460px]">
+            <span className="absolute -left-4 top-6 h-14 w-14 rounded-full border-[6px] border-yellow-400" aria-hidden="true" />
+            <span className="absolute right-2 top-0 h-6 w-6 rounded-full border-2 border-white" aria-hidden="true" />
+              <div className="h-full w-full overflow-hidden rounded-3xl border-8 border-white/20 bg-white shadow-2xl">
+                <img src={bprofilepic} alt="Belyse Abayisenga" width="330" height="330" fetchPriority="high" decoding="async" className="h-full w-full object-contain" />
+            </div>
+            <div className="absolute -bottom-4 left-0 rounded-2xl bg-white px-5 py-3 text-[#1a1033] shadow-xl">
+              <p className="text-3xl font-bold leading-none">STEM</p>
+              <p className="mt-1 text-xs text-gray-500">Student &amp; leader</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Curved white edge into the next section */}
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="absolute bottom-0 left-0 h-16 w-full lg:h-24" aria-hidden="true">
+          <path d="M0,120 L0,70 Q720,-40 1440,70 L1440,120 Z" fill="#ffffff" />
+        </svg>
+      </header>
+
+      <ScrollLinkedSection ref={refs.about} id="about" className="scroll-mt-20 px-5 py-20 lg:px-10">
+        <AboutMe />
       </ScrollLinkedSection>
 
-      {/* Experience Section */}
-      <ScrollLinkedSection
-        ref={experienceRef}
-        id="experience"
-        className="min-h-screen px-[5%] py-20 animate-[appearLeft_1s_linear]"
-      >
+      <ScrollLinkedSection ref={refs.experience} id="experience" className="scroll-mt-20 bg-[#eff8fa] px-5 py-20 lg:px-10">
         <Experience />
       </ScrollLinkedSection>
 
-
-      <ScrollLinkedSection
-        ref={projectsRef}
-        id="projects"
-        className="min-h-screen px-[5%]  animate-[appearRight_1s_linear]"
-      >
-        <p className="text-lg font-semibold text-gray-600 uppercase tracking-wider text-center">Browse My Recent</p>
-
-        <h1 className="text-center text-5xl font-bold mt-2">Projects</h1>
-
+      <ScrollLinkedSection ref={refs.projects} id="projects" className="scroll-mt-20 px-5 py-20 lg:px-10">
+        <p className="text-center text-sm font-semibold text-[#087b89]">Browse my recent</p>
+        <h2 className="mt-1 text-center text-4xl font-bold sm:text-5xl">Projects</h2>
         <Projects />
-      </ScrollLinkedSection>
-      <ScrollLinkedSection>
         <ClientsCarousel />
       </ScrollLinkedSection>
 
-      <ScrollLinkedSection
-        ref={contactRef}
-        id="contact"
-        className="min-h-screen px-[5%] flex flex-col justify-center items-center mb-20"
-      >
-        <p className="text-lg font-semibold text-gray-600 uppercase tracking-wider text-center">Get in Touch</p>
-
-        <h1 className="text-5xl font-bold mt-2 mb-20">Contact Me</h1>
-
-
-        <ScrollLinkedItem className="mt-12 w-full">
+      <ScrollLinkedSection ref={refs.contact} id="contact" className="scroll-mt-20 bg-[#eff8fa] px-5 py-20 lg:px-10">
+        <ScrollLinkedItem className="mx-auto w-full max-w-3xl">
           <NewsletterCard />
         </ScrollLinkedItem>
-
       </ScrollLinkedSection>
 
-
-      {/* //Footer */}
       <NewFooter />
-
-
     </div>
   );
 }

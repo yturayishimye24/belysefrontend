@@ -1,151 +1,69 @@
-import React, { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
+import React, { useState } from "react";
 import ScrollLinkedItem from "./ScrollLinkedItem.jsx";
 
 const OPPORTUNITIES = [
-  {
-    id: 1,
-    title: "Scholarships",
-    description: "We offer a range of scholarships designed to assist exceptional school students pursuing a technical or computer secondary education path in modern technology.",
-    buttonText: "Read More",
-    accentColor: "bg-blue-600",
-    bgColor: "bg-blue-50/60"
-  },
-  {
-    id: 2,
-    title: "Internships",
-    description: "Our #GoogleInterns and residents help build products that create opportunities for everyone. Bring your insight, imagination, and a healthy disregard for the impossible.",
-    buttonText: "Read More",
-    accentColor: "bg-red-500",
-    bgColor: "bg-red-50/60"
-  },
-  {
-    id: 3,
-    title: "Apprenticeships",
-    description: "Apprentices join different teams to gain practical skills while at Google, and study towards an externally-recognized premium professional qualification.",
-    buttonText: "Read More",
-    accentColor: "bg-yellow-500",
-    bgColor: "bg-yellow-50/60"
-  },
-  {
-    id: 4,
-    title: "Programs",
-    description: "Dive in to find programs that match your interests. Immerse yourself in software development and technical project work to prepare you for future placement options.",
-    buttonText: "Read More",
-    accentColor: "bg-green-600",
-    bgColor: "bg-green-50/60"
-  }
+  { id: 1, title: "Scholarships", buttonText: "Read more", description: "We offer a range of scholarships designed to assist exceptional school students pursuing a technical or computer secondary education path in modern technology." },
+  { id: 2, title: "Internships", buttonText: "Read more", description: "Our #GoogleInterns and residents help build products that create opportunities for everyone. Bring your insight, imagination, and a healthy disregard for the impossible." },
+  { id: 3, title: "Apprenticeships", buttonText: "Read more", description: "Apprentices join different teams to gain practical skills while at Google, and study towards an externally-recognized premium professional qualification." },
+  { id: 4, title: "Programs", buttonText: "Read more", description: "Dive in to find programs that match your interests. Immerse yourself in software development and technical project work to prepare you for future placement options." },
 ];
 
-// macOS-style close button: red dot, X fades in only on hover.
+// macOS-style close button: red dot, X fades in on hover.
 function CloseButton({ onClick }) {
   return (
     <button
       onClick={onClick}
       aria-label="Close"
-      className="group absolute -top-3 -left-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-[#e0443e] bg-[#ff5f56] shadow-sm transition-transform active:scale-90"
+      className="group absolute -left-3 -top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-[#087b89] bg-[#008D9F] shadow-sm active:scale-90"
     >
-      <svg viewBox="0 0 8 8" className="h-2.5 w-2.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-        <path d="M1 1L7 7M7 1L1 7" stroke="#4d0000" strokeWidth="1.3" strokeLinecap="round" />
+      <svg viewBox="0 0 8 8" className="h-2.5 w-2.5 opacity-0 transition-opacity group-hover:opacity-100">
+        <path d="M1 1L7 7M7 1L1 7" stroke="white" strokeWidth="1.3" strokeLinecap="round" />
       </svg>
     </button>
   );
 }
 
 function Experience() {
-  const pathRef = useRef(null);
-
-  // The only piece of state the lightbox needs: which card (by id) is open.
   const [expandedId, setExpandedId] = useState(null);
-  const expandedItem = OPPORTUNITIES.find((item) => item.id === expandedId);
-
-  useEffect(() => {
-    const path = pathRef.current;
-    if (!path) return;
-
-    const pathLength = path.getTotalLength();
-    gsap.set(path, {
-      strokeDasharray: pathLength,
-      strokeDashoffset: pathLength,
-    });
-    gsap.to(path, {
-      strokeDashoffset: 0,
-      duration: 1.4,
-      ease: "power2.inOut",
-      delay: 0.2,
-    });
-  }, []);
+  const expanded = OPPORTUNITIES.find((o) => o.id === expandedId);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-6 py-20">
-      {/* Title Header Section */}
-      <div className="text-center mb-16">
-        <h4 className="text-lg font-semibold text-gray-600 uppercase tracking-wider">My Journey</h4>
-        <h2 className="text-4xl md:text-5xl font-sans text-gray-900 tracking-tight font-normal">
-          <span className="relative inline-block">My high school experiences</span>
-        </h2>
+    <div className="mx-auto max-w-7xl">
+      <div className="mb-14 text-center">
+        <p className="text-sm font-semibold text-[#087b89]">My journey</p>
+        <h2 className="mt-1 text-4xl font-bold sm:text-5xl">My high school experiences</h2>
       </div>
 
-      {/* Accordion Layout Wrapper */}
-      <div className="flex flex-col lg:flex-row items-stretch gap-4 w-full min-h-[420px] group">
+      <div className="group flex min-h-[380px] flex-col items-stretch gap-4 lg:flex-row">
         {OPPORTUNITIES.map((item) => (
           <ScrollLinkedItem
             key={item.id}
-            className={`relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-gray-100 p-6 md:p-8 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]
-              w-full h-auto
-              lg:w-1/4 lg:flex-1
-              hover:lg:flex-[2.2] hover:shadow-xl hover:shadow-gray-100/70
-              group-hover:opacity-85 hover:!opacity-100
-              ${item.bgColor}`}
+            className="relative flex w-full flex-col justify-between overflow-hidden rounded-3xl border-2 border-transparent bg-white p-7 shadow-sm transition-all duration-500 hover:border-[#008D9F] hover:shadow-xl lg:flex-1 hover:lg:flex-[2.2] group-hover:opacity-80 hover:!opacity-100"
           >
-            {/* Top Accent Color Bar */}
-            <div className={`absolute top-0 left-0 right-0 h-2 w-full ${item.accentColor}`} />
-
-            <div className="flex flex-col items-center text-center lg:text-left lg:items-start w-full">
-              <h3 className="text-2xl md:text-3xl font-sans text-gray-800 tracking-tight mb-4 mt-2">
-                {item.title}
-              </h3>
-
-              <p className="text-sm md:text-base text-gray-600 font-light leading-relaxed transition-all duration-500 max-w-md
-                opacity-100 max-h-[500px]
-                lg:opacity-0 lg:max-h-0 lg:overflow-hidden
-                [div:hover_&]:lg:opacity-100 [div:hover_&]:lg:max-h-[300px] [div:hover_&]:lg:mt-2"
-              >
+            <div>
+              <div className="mb-5 h-1.5 w-14 rounded-full bg-gradient-to-r from-[#0D4580] to-[#008D9F]" />
+              <h3 className="text-2xl font-semibold">{item.title}</h3>
+              <p className="mt-3 max-w-md text-sm leading-relaxed text-gray-600 transition-all duration-500 lg:max-h-0 lg:overflow-hidden lg:opacity-0 [div:hover_&]:lg:mt-4 [div:hover_&]:lg:max-h-72 [div:hover_&]:lg:opacity-100">
                 {item.description}
               </p>
             </div>
-
-            <div className="mt-8 flex justify-center lg:justify-start w-full">
-              <button
-                className="inline-flex items-center justify-center border border-gray-300 hover:border-gray-400 bg-white text-blue-600 font-medium px-6 py-2 rounded-full text-sm shadow-sm transition-all duration-200 active:scale-95"
-                onClick={() => setExpandedId(item.id)}
-              >
-                {item.buttonText}
-              </button>
-            </div>
+            <button
+              className="mt-8 self-start rounded-full border-2 border-[#008D9F] px-6 py-2 text-sm font-semibold text-[#0A4857] transition-colors hover:bg-[#008D9F] hover:text-white"
+              onClick={() => setExpandedId(item.id)}
+            >
+              {item.buttonText}
+            </button>
           </ScrollLinkedItem>
         ))}
       </div>
 
-      {/* Lightbox: only exists in the DOM while expandedItem is truthy */}
-      {expandedItem && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => setExpandedId(null)}
-        >
-          <div
-            className={`relative w-full max-w-lg rounded-[24px] border border-gray-100 p-8 md:p-10 shadow-2xl ${expandedItem.bgColor}`}
-            onClick={(e) => e.stopPropagation()}
-          >
+      {expanded && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#062f39]/75 p-4" onClick={() => setExpandedId(null)}>
+          <div className="relative w-full max-w-lg rounded-3xl bg-white p-8 shadow-2xl md:p-10" onClick={(e) => e.stopPropagation()}>
             <CloseButton onClick={() => setExpandedId(null)} />
-            <div className={`absolute top-0 left-0 right-0 h-2 w-full rounded-t-[24px] ${expandedItem.accentColor}`} />
-
-            <h3 className="text-3xl font-sans text-gray-800 tracking-tight mb-4 mt-2">
-              {expandedItem.title}
-            </h3>
-            <p className="text-base text-gray-600 font-light leading-relaxed">
-              {expandedItem.description}
-            </p>
+            <div className="mb-5 h-1.5 w-14 rounded-full bg-gradient-to-r from-[#0D4580] to-[#008D9F]" />
+            <h3 className="mb-3 text-3xl font-semibold">{expanded.title}</h3>
+            <p className="leading-relaxed text-gray-600">{expanded.description}</p>
           </div>
         </div>
       )}

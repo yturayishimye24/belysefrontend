@@ -1,23 +1,20 @@
-import {useRef,useState,useEffect} from "react"
+import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
-import {BlinkBlur} from "react-loading-indicators"
-import Aos from "aos";
-import "aos/dist/aos.css"
+import { BlinkBlur } from "react-loading-indicators";
+
+const field =
+  "peer block w-full rounded-xl border-2 border-[#b9dfe4] bg-white px-4 pb-2 pt-6 text-sm text-gray-900 focus:border-[#008D9F] focus:outline-none";
+const label =
+  "pointer-events-none absolute left-4 top-4 origin-[0] -translate-y-3 scale-75 text-sm text-[#087b89] duration-200 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-[#008D9F]";
 
 export default function Contact() {
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const form = useRef();
-  useEffect(()=>{
-     Aos.init({
-      duration: 1000,
-      once: true,
-     })
-  },[])
-  const sendEmail = async (e) =>{
+
+  const sendEmail = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    try{
+    try {
       await emailjs.sendForm("service_fvyjy5k", "template_wjatw3b", form.current, "vfvKIY9D4tzjlkrbJ");
       alert("Message sent successfully!");
       form.current.reset();
@@ -26,116 +23,48 @@ export default function Contact() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <section id="contact" className="w-full scroll-mt-24 bg-white px-4 py-16">
-      <div className="max-w-xl mx-auto space-y-6">
-        <h2 className="text-5xl font-poppins text-center text-gray-800">Get in Touch</h2>
-        
-        <form ref={form} className="space-y-5" onSubmit={sendEmail}>
-         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-         <div className="flex flex-col space-y-4">
-          <div className="relative">
-            <input
-              data-aos="fade-up"
-              name="firstName"
-              type="text"
-              id="firstName"
-              className="block w-full px-4 pt-5 pb-2 text-sm text-gray-900 bg-transparent rounded-md border border-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-[#0F9D58] focus:border-transparent peer"
-              placeholder=""
-              required
-            />
-            <label
-              htmlFor="firstName"
-              className="absolute text-sm text-gray-500 duration-200 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 bg-white px-1 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#0F9D58]"
-            >
-              First name
-            </label>
-          </div>
-
-          <div className="relative">
-            <input
-              data-aos="fade-left"
-              name="lastName"
-              type="text"
-              id="lastName"
-              className="block w-full px-4 pt-5 pb-2 text-sm text-gray-900 bg-transparent rounded-md border border-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-[#0F9D58] focus:border-transparent peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="lastName"
-              className="absolute text-sm text-gray-500 duration-200 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 bg-white px-1 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#0F9D58]"
-            >
-              Last name
-            </label>
-          </div>
-          
-          <div className="relative">
-            <input
-              data-aos="fade-left"
-              name="email"
-              type="email"
-              id="email"
-              className="block w-full px-4 pt-5 pb-2 text-sm text-gray-900 bg-transparent rounded-md border border-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-[#0F9D58] focus:border-transparent peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="email"
-              className="absolute text-sm text-gray-500 duration-200 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 bg-white px-1 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#0F9D58]"
-            >
-               Email
-            </label>
-          </div>
-          </div>
-         
-          <div className="relative h-full">
-            <textarea
-              data-aos="fade-down"
-              name="message"
-              id="message"
-              rows="4"
-              className="block h-full min-h-[188px] w-full resize-none px-4 pt-5 pb-2 text-sm text-gray-900 bg-transparent rounded-md border border-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-[#0F9D58] focus:border-transparent peer"
-              placeholder=""
-              required
-            />
-            <label
-              htmlFor="message"
-              className="absolute text-sm text-gray-500 duration-200 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 bg-white px-1 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#0F9D58]"
-            >
-              Your Message
-            </label>
-          </div>
-</div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2.5 bg-[#0F9D58] hover:bg-[#18975a] text-white font-medium rounded-md text-sm transition-all disabled:cursor-not-allowed disabled:hover:bg-green-100"
-          >
-            {!loading? "Send" : "Sending..."}
-          </button>
-        </form>
+    <div>
+      <div className="mb-10 text-center">
+        <p className="text-sm font-semibold text-[#087b89]">Have a question or an opportunity?</p>
+        <h2 className="mt-1 text-4xl font-bold sm:text-5xl">Get in touch</h2>
       </div>
 
-      {loading && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Sending message"
+      <form ref={form} onSubmit={sendEmail} className="grid gap-4 rounded-3xl bg-white p-6 shadow-lg sm:grid-cols-2 sm:p-8">
+        <div className="relative">
+          <input name="firstName" id="firstName" type="text" placeholder=" " required className={field} />
+          <label htmlFor="firstName" className={label}>First name</label>
+        </div>
+        <div className="relative">
+          <input name="lastName" id="lastName" type="text" placeholder=" " required className={field} />
+          <label htmlFor="lastName" className={label}>Last name</label>
+        </div>
+        <div className="relative sm:col-span-2">
+          <input name="email" id="email" type="email" placeholder=" " required className={field} />
+          <label htmlFor="email" className={label}>Email</label>
+        </div>
+        <div className="relative sm:col-span-2">
+          <textarea name="message" id="message" rows="5" placeholder=" " required className={`${field} resize-none`} />
+          <label htmlFor="message" className={label}>Your message</label>
+        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded-full bg-gradient-to-r from-[#0D4580] to-[#008D9F] py-3 text-sm font-semibold text-white shadow-md transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2"
         >
-          <div className="flex min-h-[188px] w-full max-w-sm items-center justify-center rounded-md bg-white px-8 shadow-xl">
-            <BlinkBlur
-              color={["#4285F4", "#EA4335", "#FBBC05", "#34A853"]}
-              size="medium"
-              text=""
-              textColor=""
-            />
+          {loading ? "Sending..." : "Send message"}
+        </button>
+      </form>
+
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A4857]/40 px-4" role="dialog" aria-modal="true" aria-label="Sending message">
+          <div className="flex min-h-[188px] w-full max-w-sm items-center justify-center rounded-3xl bg-white shadow-xl">
+            <BlinkBlur color={["#0D4580", "#0A4857", "#008D9F", "#45c4cf"]} size="medium" text="" textColor="" />
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }

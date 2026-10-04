@@ -1,41 +1,17 @@
-import wave from "../../src/assets/images/wave.png";
+import { FaInstagram, FaLinkedin } from "react-icons/fa";
 
-
-
-export default function Footer() {
+export default function NewFooter() {
   return (
-    <footer className="relative overflow-hidden bg-black  h-[250px]">
-      <div
-        className="absolute bottom-0 left-0 w-full h-[100px] bg-repeat-x bg-[length:1000px_100px] animate-wave1 z-[1000]"
-        style={{
-          backgroundImage: `url(${wave})`,
-        }}
-      ></div>
-
-      <div
-        className="absolute bottom-[15px] left-0 w-full h-[100px] bg-repeat-x bg-[length:1000px_100px] animate-wave2 opacity-50 z-[999]"
-        style={{
-          backgroundImage: `url(${wave})`,
-        }}
-      ></div>
-
-      <div
-        className="absolute bottom-[10px] left-0 w-full h-[100px] bg-repeat-x bg-[length:1000px_100px] animate-wave1 opacity-20 z-[998]"
-        style={{
-          backgroundImage: `url(${wave})`,
-        }}
-      ></div>
-
-      <div
-        className="absolute bottom-[20px] left-0 w-full h-[100px] bg-repeat-x bg-[length:1000px_100px] animate-wave2 opacity-70 z-[997]"
-        style={{
-          backgroundImage: `url(${wave})`,
-        }}
-      ></div>
-
-      {/* Footer content */}
-      <div className="relative z-[2000] flex h-full items-center justify-center text-white">
-        <p>© 2026 Your Website. All rights reserved.</p>
+    <footer className="bg-gradient-to-br from-[#2e1065] via-[#4c1d95] to-[#6d28d9] px-5 py-12 font-poppins text-white">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 sm:flex-row">
+        <a href="#home" className="text-2xl font-bold">
+          Belyse<span className="text-yellow-400">.</span>
+        </a>
+        <p className="text-sm text-purple-200">© 2026 Belyse Abayisenga. All rights reserved.</p>
+        <div className="flex gap-5 text-2xl">
+          <a href="#" aria-label="Instagram" className="transition-colors hover:text-yellow-400"><FaInstagram /></a>
+          <a href="#" aria-label="LinkedIn" className="transition-colors hover:text-yellow-400"><FaLinkedin /></a>
+        </div>
       </div>
     </footer>
   );

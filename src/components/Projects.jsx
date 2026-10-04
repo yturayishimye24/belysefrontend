@@ -1,122 +1,63 @@
 import React, { useState } from "react";
-// Images imports
 import BrownCench from "../../src/assets/images/BrownCench.jpeg";
 import Cench from "../../src/assets/images/Cench.jpeg";
 import BlueCench from "../../src/assets/images/BlueCench.png";
-// Library imports
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import ScrollLinkedItem from "./ScrollLinkedItem.jsx";
 
-// 1. Unified structure using 'quote' across all members
+// Placeholder content: replace with your own projects.
 const TEAM_MEMBERS = [
-  {
-    id: 1,
-    name: "John Doe",
-    role: "Consultant, Clinic Operations",
-    quote: "I am in charge of consultation at clinic. I take care of all patients who visit our practice. I decide whether they need further treatment. As a result, I play a crucial role in ensuring that each patient receives the best possible care.",
-    image: BrownCench,
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    role: "Head Nurse",
-    quote: "As the head nurse, I oversee the nursing staff and ensure that patient care is delivered efficiently and compassionately. I coordinate with doctors and other healthcare professionals to create a supportive environment for both patients and staff.",
-    image: BlueCench,
-  },
-  {
-    id: 3,
-    name: "Marcus Vance",
-    role: "Chief Nursing Officer",
-    quote: "Our operational strategy focuses heavily on optimizing clinic communication channels. By coordinating seamlessly between care staff and management, we elevate patient outcomes significantly.",
-    image: Cench,
-  }
+  { id: 1, name: "John Doe", role: "Consultant, Clinic Operations", image: BrownCench,
+    quote: "I am in charge of consultation at clinic. I take care of all patients who visit our practice. I decide whether they need further treatment. As a result, I play a crucial role in ensuring that each patient receives the best possible care." },
+  { id: 2, name: "Jane Smith", role: "Head Nurse", image: BlueCench,
+    quote: "As the head nurse, I oversee the nursing staff and ensure that patient care is delivered efficiently and compassionately. I coordinate with doctors and other healthcare professionals to create a supportive environment for both patients and staff." },
+  { id: 3, name: "Marcus Vance", role: "Chief Nursing Officer", image: Cench,
+    quote: "Our operational strategy focuses heavily on optimizing clinic communication channels. By coordinating seamlessly between care staff and management, we elevate patient outcomes significantly." },
 ];
 
 const slideVariants = {
-  enter: (direction) => ({
-    x: direction > 0 ? 150 : -150,
-    opacity: 0,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    transition: { duration: 0.4, ease: "easeInOut" },
-  },
-  exit: (direction) => ({
-    x: direction < 0 ? 150 : -150,
-    opacity: 0,
-    transition: { duration: 0.3, ease: "easeInOut" },
-  }),
+  enter: (d) => ({ x: d > 0 ? 150 : -150, opacity: 0 }),
+  center: { x: 0, opacity: 1, transition: { duration: 0.4, ease: "easeInOut" } },
+  exit: (d) => ({ x: d < 0 ? 150 : -150, opacity: 0, transition: { duration: 0.3, ease: "easeInOut" } }),
 };
 
+const arrow =
+  "absolute top-1/2 z-20 -translate-y-1/2 rounded-full bg-[#0A4857] p-3 text-white shadow-md transition-transform hover:bg-[#008D9F] active:scale-95";
+
 function Projects() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const member = TEAM_MEMBERS[index];
+  const n = TEAM_MEMBERS.length;
 
-  // 2. FIXED: Moved inside the component function so it can read currentIndex state
-  const currentMember = TEAM_MEMBERS[currentIndex];
-
-  const handleNext = () => {
-    setDirection(1);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % TEAM_MEMBERS.length);
-  };
-
-  const handlePrev = () => {
-    setDirection(-1);
-    setCurrentIndex(
-      (prevIndex) =>
-        (prevIndex - 1 + TEAM_MEMBERS.length) % TEAM_MEMBERS.length,
-    );
+  const go = (step) => {
+    setDirection(step);
+    setIndex((i) => (i + step + n) % n);
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-6 py-12 md:py-20">
-      <div className="relative w-full max-w-5xl mx-auto px-16 py-12 select-none">
-        
-        {/* Main Container Wrapper */}
-        <div className="bg-[#f8f9fa] rounded-[32px] border border-gray-100 shadow-sm min-h-[600px] md:min-h-[400px] flex items-center overflow-hidden relative">
+    <div className="mx-auto max-w-5xl py-12">
+      <div className="relative select-none px-14 md:px-16">
+        <div className="relative flex min-h-[560px] items-center overflow-hidden rounded-[32px] bg-[#eff8fa] md:min-h-[400px]">
           <AnimatePresence mode="wait" custom={direction}>
-            <ScrollLinkedItem
-              key={currentMember.id} // Re-renders and fires slide animation when ID changes
-              className="w-full"
-            >
+            <ScrollLinkedItem key={member.id} className="w-full">
               <motion.div
                 custom={direction}
                 variants={slideVariants}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className="w-full p-8 md:p-16 flex flex-col md:flex-row items-center gap-8 md:gap-16"
+                className="flex w-full flex-col items-center gap-8 p-8 md:flex-row md:gap-14 md:p-14"
               >
-                {/* Left Column: Avatar Layout */}
-                <div className="flex-shrink-0 w-[180px] h-[180px] md:w-[260px] md:h-[260px]">
-                  <div className="w-full h-full rounded-full overflow-hidden border border-gray-200/60 shadow-inner">
-                    <img
-                      src={currentMember.image}
-                      alt={currentMember.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                <div className="h-44 w-44 flex-shrink-0 overflow-hidden rounded-full border-8 border-white shadow-lg md:h-64 md:w-64">
+                  <img src={member.image} alt={member.name} className="h-full w-full object-cover" />
                 </div>
-
-                {/* Right Column: Dynamic Typography Grid */}
-                <div className="flex-1 text-center md:text-left flex flex-col justify-center">
-                  <span className="text-5xl md:text-6xl font-serif text-gray-300 block mb-2 leading-none md:-ml-2">
-                    “
-                  </span>
-
-                  <p className="text-lg md:text-xl font-light text-gray-700 leading-relaxed -mt-4 mb-6">
-                    {currentMember.quote}
-                  </p>
-
-                  <div className="border-t border-gray-200/60 pt-4 inline-block">
-                    <p className="text-base font-semibold text-gray-900">
-                      {currentMember.name}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-0.5 font-medium tracking-wide">
-                      {currentMember.role}
-                    </p>
+                <div className="flex-1 text-center md:text-left">
+                  <p className="text-lg leading-relaxed text-gray-700 md:text-xl">“{member.quote}”</p>
+                  <div className="mt-6 inline-block border-t-2 border-[#008D9F] pt-3">
+                    <p className="font-semibold">{member.name}</p>
+                    <p className="text-sm text-[#087b89]">{member.role}</p>
                   </div>
                 </div>
               </motion.div>
@@ -124,24 +65,8 @@ function Projects() {
           </AnimatePresence>
         </div>
 
-        {/* Absolutely Positioned Navigation Buttons */}
-        {/* Left Chevron Button */}
-        <button
-          onClick={handlePrev}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white border border-gray-200 hover:border-gray-400 text-gray-600 p-3 rounded-full shadow-sm transition-all hover:shadow-md active:scale-95 z-20"
-          aria-label="Previous Team Member"
-        >
-          <ChevronLeft size={20} />
-        </button>
-
-        {/* Right Chevron Button */}
-        <button
-          onClick={handleNext}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white border border-gray-200 hover:border-gray-400 text-gray-600 p-3 rounded-full shadow-sm transition-all hover:shadow-md active:scale-95 z-20"
-          aria-label="Next Team Member"
-        >
-          <ChevronRight size={20} />
-        </button>
+        <button onClick={() => go(-1)} className={`${arrow} left-0`} aria-label="Previous project"><ChevronLeft size={20} /></button>
+        <button onClick={() => go(1)} className={`${arrow} right-0`} aria-label="Next project"><ChevronRight size={20} /></button>
       </div>
     </div>
   );
