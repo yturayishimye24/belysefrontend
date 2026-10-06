@@ -166,7 +166,7 @@ function Home() {
             <div className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start">
               <button
                 onClick={() => goTo("contact")}
-                className="rounded-full bg-gradient-to-r from-[#0b3540] to-[#12a2ad] px-8 py-3 text-sm font-semibold shadow-lg shadow-[#062f39]/30 transition-transform hover:-translate-y-0.5"
+                className="rounded-full bg-black px-8 py-3 text-sm text-white font-semibold transition-transform hover:-translate-y-0.5"
               >
                 Contact me
               </button>
