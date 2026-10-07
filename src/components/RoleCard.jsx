@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // Images imports
-import BrownCench from "../../src/assets/images/BrownCench.jpeg";
+import BrownCench from "../../src/assets/images/unnamed.png";
 import Cench from "../../src/assets/images/Cench.jpeg";
 import BlueCench from "../../src/assets/images/BlueCench.png";
 // Library imports
