@@ -81,7 +81,7 @@ const AboutMe = () => {
         </div>
 
         {/* Progress Cards */}
-        <div className="grid gap-4 sm:gap-5">
+        <div className="grid grid-cols-2 gap-4 sm:gap-5">
           <h3 className="text-xl sm:text-2xl font-bold text-[#2D2321] mb-1">Core Competencies</h3>
           {STRENGTHS.map((item) => {
             const pct = Number.parseInt(item.value, 10);
