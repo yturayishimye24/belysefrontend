@@ -85,7 +85,7 @@ function Home() {
   return (
     <div className="font-google-sans bg-[#FDF8F5] text-[#2D2321] min-h-screen overflow-x-hidden">
       {/* FLOATING & STICKY NAVBAR */}
-      <div className="pointer-events-none fixed top-0 left-0 right-0 z-[100] flex justify-center p-3 sm:p-4">
+      <div className="pointer-events-none fixed top-[-10px] left-0 right-0 z-[100] flex justify-center p-3 sm:p-4">
         <nav
           className={`pointer-events-auto flex w-full max-w-7xl items-center justify-between transition-all duration-300 rounded-full px-4 sm:px-6 py-2.5 sm:py-3 ${
             hasScrolled
