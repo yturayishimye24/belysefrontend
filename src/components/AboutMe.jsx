@@ -104,8 +104,8 @@ const AboutMe = () => {
                   {item.value}
                 </div>
 
-                {/* Glowing Green Progress Bar */}
-                <div className="mt-3 sm:mt-4 relative h-5 sm:h-6 w-full overflow-hidden rounded-full bg-[#2C2C2E] p-0.5 sm:p-1">
+                
+                <div className="mt-3 sm:mt-4 relative h-5 sm:h-6 w-full overflow-hidden rounded-full bg-orange p-0.5 sm:p-1">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-300 shadow-[0_0_12px_#34d399] transition-all duration-1000"
                     style={{ width: `${pct}%` }}
