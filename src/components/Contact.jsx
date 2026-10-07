@@ -52,7 +52,7 @@ export default function Contact() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-full bg-gradient-to-r from-[#0D4580] to-[#008D9F] py-3 text-sm font-semibold text-white shadow-md transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2"
+          className="rounded-full bg-black/5 py-3 text-sm font-semibold text-white shadow-md transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2"
         >
           {loading ? "Sending..." : "Send message"}
         </button>
